@@ -1,6 +1,13 @@
+package com.dropboxivity
 import collection.mutable.Stack
 import org.scalatest._
 import org.scalatest.matchers._
+import org.specs2.mutable._
+import scala.collection.immutable._
+import scala.collection.immutable.List
+//import org.joda.time.DateTime
+import org.scala_tools.time.Imports._
+import scala.collection.immutable.List
 
 class StackSpec extends FlatSpec with ShouldMatchers {
 
@@ -18,8 +25,6 @@ class StackSpec extends FlatSpec with ShouldMatchers {
   }
 }
 
-import org.specs2.mutable._
-
 object ArithmeticSpec extends Specification {
   "Arithmetic" should {
     "add two numbers" in {
@@ -27,6 +32,15 @@ object ArithmeticSpec extends Specification {
     }
     "add three numbers" in {
       1 + 1 + 1 mustEqual 3
+    }
+    "one revision returns empty" in {
+      def a = List(DateTime.now)
+      ScalaProject.compile(a) mustEqual Nil
+    }
+    "one second wide revisions returns one record" in {
+      def a = DateTime.now.second(0)
+      def b = DateTime.now.second(1)
+      ScalaProject.compile(List(a,b)) mustEqual List(List(a,b,1000))
     }
   }
 }
