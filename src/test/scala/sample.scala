@@ -4,10 +4,7 @@ import org.scalatest._
 import org.scalatest.matchers._
 import org.specs2.mutable._
 import scala.collection.immutable._
-import scala.collection.immutable.List
-//import org.joda.time.DateTime
 import org.scala_tools.time.Imports._
-import scala.collection.immutable.List
 
 class StackSpec extends FlatSpec with ShouldMatchers {
 
@@ -38,9 +35,17 @@ object ArithmeticSpec extends Specification {
       ScalaProject.compile(a) mustEqual Nil
     }
     "one second wide revisions returns one record" in {
-      def a = DateTime.now.second(0)
-      def b = DateTime.now.second(1)
+      val a = DateTime.now
+      def b = a.plusSeconds(1)
       ScalaProject.compile(List(a,b)) mustEqual List(List(a,b,1000))
+    }
+
+    "datatimes should be in descending order" in {
+    	val a = DateTime.now
+    	val b = a.plusMinutes(1)
+      ScalaProject.compile(List(a,b)) mustEqual List(List(a,b,60000))
+      ScalaProject.compile(List(b,a)) must throwA(new Exception("Revisions are not in order"))
+
     }
   }
 }
